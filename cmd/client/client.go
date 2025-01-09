@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv"
 )
 
 type GroqRequest struct {
@@ -35,20 +35,14 @@ type ResponseStream struct {
 }
 
 var (
-	API_KEY = os.Getenv("API_KEY")
-	URL     = os.Getenv("URL")
+	GROQ_API_KEY = os.Getenv("GROQ_API_KEY")
 )
 
-func init() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Printf("Error loading .env file: %v", err)
-	}
-	API_KEY = os.Getenv("API_KEY")
-	URL = os.Getenv("URL")
-}
-
 func ChatCompletion(prompt string) {
+
+	if GROQ_API_KEY == "" {
+		log.Fatal("Warning: GROQ_API_KEY wasn't found in the environemnt!")
+	}
 
 	body := GroqRequest{
 		Model:  "llama-3.3-70b-versatile",
@@ -67,13 +61,13 @@ func ChatCompletion(prompt string) {
 		return
 	}
 
-	req, err := http.NewRequest(http.MethodPost, URL, bytes.NewReader(jsonBody))
+	req, err := http.NewRequest(http.MethodPost, "https://api.groq.com/openai/v1/chat/completions", bytes.NewReader(jsonBody))
 	if err != nil {
 		log.Print("Error creating request: ", err)
 		return
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", API_KEY))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", GROQ_API_KEY))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{
