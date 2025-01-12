@@ -1,4 +1,8 @@
-## OLLAMA-CLI - Chat Completion
+## OLLAMA-CLI - Chat Completion with context
+
+![preview](https://github.com/user-attachments/assets/9c9c9f61-6fd8-4986-bc06-6860ce17f051)
+
+---
 
 Get the `GROQ_API_KEY` from [GRQO CLOUD](https://console.groq.com/keys).
 
