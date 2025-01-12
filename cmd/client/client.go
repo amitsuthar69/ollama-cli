@@ -170,8 +170,13 @@ func getContext() string {
 }
 
 func DisplayHistory(filter int16) {
+
 	fmt.Println(strings.Repeat("-", 70))
-	fmt.Printf("\t\tYour History with ollama-cli for %d days", filter)
+	if filter == -1 {
+		fmt.Printf("\t\tYour History with ollama-cli for all days")
+	} else {
+		fmt.Printf("\t\tYour History with ollama-cli for %d days", filter)
+	}
 	fmt.Println("\n" + strings.Repeat("-", 70) + "\n\n")
 
 	history, err := loadHistory("ollama_history.json")
@@ -179,12 +184,17 @@ func DisplayHistory(filter int16) {
 		fmt.Println("Nothing to show right now.")
 	}
 
-	thresholdDate := time.Now().AddDate(0, 0, -int(filter))
+	var thresholdDate time.Time
+	if filter == -1 {
+		thresholdDate = time.Time{} // A very old date to include all conversations
+	} else {
+		thresholdDate = time.Now().AddDate(0, 0, -int(filter))
+	}
 
 	for _, convos := range history.Conversations {
 		convoTime, _ := time.Parse(time.RFC3339, convos.Time)
 
-		if convoTime.After(thresholdDate) {
+		if filter == -1 || convoTime.After(thresholdDate) {
 			fmt.Printf("date: %v", convoTime)
 			for _, convo := range convos.Conversation {
 				fmt.Printf("\n%s%s", convo.Role, convo.Content)
