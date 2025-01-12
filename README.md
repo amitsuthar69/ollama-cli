@@ -37,6 +37,21 @@ mv ./ollama ~/.local/bin
 ollama ask "your prompt...""
 ```
 
+- Context
+
+```bash
+ollama ask -c "prompt which needs context of previous chats..."
+```
+
+- History
+
+```bash
+ollama history        # all history
+ollama history -d 2   # past 2 days
+```
+
+---
+
 ```
 >> ollama --help
 CLI Wrapper for llama.
@@ -48,9 +63,11 @@ Available Commands:
   ask         prompt the LLM
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
+  history     Show the history of prompts
 
 Flags:
   -h, --help     help for ollama
+  -t, --toggle   Help message for toggle
 
 Use "ollama [command] --help" for more information about a command.
 ```
@@ -63,5 +80,6 @@ Usage:
   ollama ask <message> [flags]
 
 Flags:
+  -c, --ctx    Use Context Mode. [Context window: 10 mins]
   -h, --help   help for ask
 ```
